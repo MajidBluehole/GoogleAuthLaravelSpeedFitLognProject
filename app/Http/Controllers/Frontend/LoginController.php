@@ -1,54 +1,58 @@
 <?php
-// app/Http/Controllers/Auth/LoginController.php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
-use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
+    public function index()
+    {
+        return view('frontend.pages-sign-in');
+    }
+
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
     }
-
-    public function index()
+        public function logout(Request $request)
     {
-        return view('login.index');
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
     }
+
     public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
         ]);
-    
+
         $credentials = $request->only('email', 'password');
-        // dd($credentials);
-    
-        if (Auth::attempt($credentials)) {
+
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
             $user = Auth::user();
-    
-            // Redirect based on role
+
             if ($user->hasRole('admin')) {
                 return redirect()->intended('/admin');
             } else if ($user->hasRole('customer')) {
                 return redirect()->intended('/');
             }
-    
-            return redirect()->intended('/home');
+
+            return redirect()->intended('/login');
         }
-    
+
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
     }
-    
 
     public function handleGoogleCallback()
     {
@@ -60,21 +64,19 @@ class LoginController extends Controller
 
         $user = $this->findOrCreateUser($googleUser);
 
-        // Assign role to user
         if (!$user->hasAnyRole(['admin', 'customer'])) {
             $user->assignRole('customer'); // Default role
         }
 
         Auth::login($user, true);
 
-        // Redirect based on role
         if ($user->hasRole('admin')) {
             return redirect()->intended('/admin');
         } else if ($user->hasRole('customer')) {
-            return redirect()->intended('/customer');
+            return redirect()->intended('/');
         }
 
-        return redirect()->intended('/home');
+        return redirect()->intended('/login');
     }
 
     public function findOrCreateUser($googleUser)
@@ -89,7 +91,7 @@ class LoginController extends Controller
             'email' => $googleUser->email,
             'google_id' => $googleUser->id,
             'avatar' => $googleUser->avatar,
-            'password' => encrypt('123456dummy')
+            'password' => encrypt('123456dummy') // This should be handled differently in production
         ]);
     }
 }
