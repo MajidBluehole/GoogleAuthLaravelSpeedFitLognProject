@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password', 'google_id', 'avatar'
+        'name', 'email', 'password', 'google_id', 'avatar','mobile', 'country_id', 'state_id', 'city_id', 'image'
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -40,4 +40,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
 }

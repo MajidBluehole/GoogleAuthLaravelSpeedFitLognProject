@@ -58,6 +58,12 @@
 					</li>
 
 					<li class="sidebar-item">
+						<a class="sidebar-link" href="{{url('/users/create')}}">
+              <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Add User</span>
+            </a>
+					</li>
+
+					<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-blank.html">
               <i class="align-middle" data-feather="book"></i> <span class="align-middle">Blank</span>
             </a>

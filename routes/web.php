@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ProfileController;
@@ -13,6 +14,7 @@ Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::get('/signup', [SignupController::class, 'index'])->name('signup');
 Route::post('/register', [SignupController::class, 'register'])->name('register');
+
 
 // Google OAuth routes
 Route::get('login/google', [LoginController::class, 'redirectToGoogle'])->name('login.google');
@@ -33,6 +35,9 @@ Route::middleware(['auth'])->group(function () {
     // Customer routes
     Route::middleware(['role:customer'])->group(function () {
         Route::get('/', [HomeController::class, 'index']);
+        Route::resource('/users',UserController::class);
+        Route::get('/states/{country}', [UserController::class, 'getStates']);
+        Route::get('/cities/{state}', [UserController::class, 'getCities']);
         Route::get('/profile', [ProfileController::class, 'index']);
         Route::get('/charts', [ChartsController::class, 'index']);
         Route::get('/maps', [MapsController::class, 'index']);
