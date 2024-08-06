@@ -16,8 +16,8 @@
 									<h5 class="card-title mb-0">Profile Details</h5>
 								</div>
 								<div class="card-body text-center">
-									<img src="{{url('frontend/img/avatars/avatar-4.jpg')}}" alt="Christina Mason" class="img-fluid rounded-circle mb-2" width="128" height="128" />
-									<h5 class="card-title mb-0">Christina Mason</h5>
+									<img src="{{ asset('storage/images/' . $user->image) }}" alt="Christina Mason" class="img-fluid rounded-circle mb-2" width="128" height="128" />
+									<h5 class="card-title mb-0">{{ $user->name }}</h5>
 									<div class="text-muted mb-2">Lead Developer</div>
 
 									<div>
@@ -42,10 +42,10 @@
 								<div class="card-body">
 									<h5 class="h6 card-title">About</h5>
 									<ul class="list-unstyled mb-0">
-										<li class="mb-1"><span data-feather="home" class="feather-sm me-1"></span> Lives in <a href="#">San Francisco, SA</a></li>
+										<li class="mb-1"><span data-feather="home" class="feather-sm me-1"></span> Lives in <a href="#">{{ $user->city->name }}, {{ $user->state->name }}</a></li>
 
 										<li class="mb-1"><span data-feather="briefcase" class="feather-sm me-1"></span> Works at <a href="#">GitHub</a></li>
-										<li class="mb-1"><span data-feather="map-pin" class="feather-sm me-1"></span> From <a href="#">Boston</a></li>
+										<li class="mb-1"><span data-feather="map-pin" class="feather-sm me-1"></span> From <a href="#">{{ $user->country->name }}</a></li>
 									</ul>
 								</div>
 								<hr class="my-0" />

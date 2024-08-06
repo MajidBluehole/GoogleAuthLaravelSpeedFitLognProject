@@ -8,6 +8,7 @@ use App\Models\State;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -29,7 +30,13 @@ class UserController extends Controller
         // Validate the request
         $request->validate([
             'name' => 'required|string|max:50',
-            'email' => 'required|email|string|max:50|unique:users',
+            'email' => [
+                'required',
+                'email',
+                'string',
+                'max:50',
+                Rule::unique('users')->ignore($user->id),
+            ],
             'mobile' => 'required|string|max:100',
             'password' => 'required',
             'file' => 'nullable|max:10240',
